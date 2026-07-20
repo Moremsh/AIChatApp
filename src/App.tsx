@@ -1,11 +1,7 @@
-import { Button } from "./components/ui/button"
+import ChatLayout from "./layouts/ChatLayout"
 
 export function App() {
-  return (
-      <div className="flex min-h-screen items-center justify-center">
-      <Button>Hello World</Button>
-    </div>
-  )
+  return <ChatLayout />
 }
 
 export default App
