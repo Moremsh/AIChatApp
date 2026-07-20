@@ -1,4 +1,4 @@
-import { mockConversations } from "@/utils/mockConversation"
+import { mockConversations } from "@/utils/mocks/mockConversation"
 import ConversationItem from "./ConversationItem"
 import type { Conversation } from "@/types/chat"
 import { ScrollArea } from "../ui/scroll-area"
