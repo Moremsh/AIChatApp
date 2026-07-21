@@ -2,7 +2,6 @@ import Sidebar from "@/components/layout/Sidebar"
 import ChatHeader from "@/components/chat/ChatHeader"
 import ChatInput from "@/components/chat/ChatInput"
 import MessageList from "@/components/chat/MessageList"
-import { mockMessages } from "@/utils/mocks/mockMessages"
 import { useState } from "react"
 import type { Message } from "@/types/message"
 import { sendMessage } from "@/services/chatService"
@@ -25,6 +24,19 @@ const ChatLayout = () => {
   // Derived Variables
   const activeConversation = conversations.find((conversation)=>(conversation.id === activeConversationId))
 
+
+  const handleNewConversation = () => {
+    const newConversation: Conversation = {
+      id: crypto.randomUUID(),
+      title: "New Chat",
+      messages: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    setConversations((prev) => [newConversation, ...prev]);
+    setActiveConversationId(newConversation.id);
+  };
   
   const handleSendMessage = async (text : string) => {
     const trimmed = text.trim();
@@ -47,6 +59,7 @@ const ChatLayout = () => {
         conversation.id === activeConversationId 
         ? {
           ...conversation,
+          title: newMessage.content.slice(0,30),
           messages: updatedMessages,
           updatedAt: new Date()
         } : conversation
@@ -101,7 +114,7 @@ const ChatLayout = () => {
 
   return (
     <div className="flex h-screen">
-      <Sidebar activeConversationId={activeConversationId} conversations={conversations} onSelectConversation={setActiveConversationId} />
+      <Sidebar activeConversationId={activeConversationId} conversations={conversations} onSelectConversation={setActiveConversationId} onNewConversation={handleNewConversation} />
       <main className="flex-1 flex flex-col">
         <ChatHeader />
         <MessageList messages={activeConversation?.messages ?? []} isLoading={isLoading} />

@@ -1,12 +1,13 @@
-import { mockConversations } from "@/utils/mocks/mockConversation"
 import ConversationItem from "./ConversationItem"
 import { ScrollArea } from "../ui/scroll-area"
 import type { Conversation } from "@/types/conversation"
 
 interface ConversationListProps{
-  conversations : Conversation[],
+  conversations: Conversation[];
+  activeConversationId: string;
+  onSelectConversation: (id: string) => void;
 }
-const ConversationList = ({conversations} : ConversationListProps) => {
+const ConversationList = ({conversations,activeConversationId,onSelectConversation} : ConversationListProps) => {
   return (
     <div className="flex-1 overflow-hidden">
       <h2 className="py-4 px-2 text-sm font-medium text-muted-foreground">Recent Chats</h2>
@@ -14,7 +15,12 @@ const ConversationList = ({conversations} : ConversationListProps) => {
         <ul className="space-y-1 px-2">
           {
             conversations.map((conversation) => (
-              <ConversationItem key={conversation.id} conversation={conversation}/>
+              <ConversationItem 
+                key={conversation.id} 
+                conversation={conversation}
+                active={conversation.id === activeConversationId}
+                onClick={()=> onSelectConversation(conversation.id)}
+                />
             ))
           }
         </ul>
