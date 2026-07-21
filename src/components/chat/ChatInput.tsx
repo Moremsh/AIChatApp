@@ -43,7 +43,7 @@ const ChatInput = ({onSend , isLoading} : ChatInputProps) => {
           value={message}
           disabled={isLoading}
           onChange={handleChange}
-          className='min-h-15 resize-none' 
+          className='min-h-2 max-h-56 resize-none' 
           placeholder='Type your message ....'
         />
         <Button onClick={handleSend} size={'icon'} disabled={!message.trim() || isLoading}>

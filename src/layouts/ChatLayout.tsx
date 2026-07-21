@@ -6,10 +6,26 @@ import { mockMessages } from "@/utils/mocks/mockMessages"
 import { useState } from "react"
 import type { Message } from "@/types/message"
 import { sendMessage } from "@/services/chatService"
-const ChatLayout = () => {
-  const [messages , setMessages] = useState<Message[]>(mockMessages)
-  const [isLoading, setIsLoading] = useState(false);
+import type { Conversation } from "@/types/conversation"
 
+const initialConversation : Conversation = {
+  id: crypto.randomUUID(),
+  messages: [],
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  title: "New Chat"
+}
+
+const ChatLayout = () => {
+  const [conversations, setConversations] = useState<Conversation[]>([initialConversation]);
+  const [activeConversationId, setActiveConversationId] = useState<string>(initialConversation.id);
+  const [messages , setMessages] = useState<Message[]>([])
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Derived Variables
+  const activeConversation = conversations.find((conversation)=>(conversation.id === activeConversationId))
+
+  
   const handleSendMessage = async (text : string) => {
     const trimmed = text.trim();
 
@@ -22,8 +38,20 @@ const ChatLayout = () => {
       role : 'user'
     }
 
-    const updatedMessages = [...messages, newMessage]
-    setMessages(updatedMessages)
+    if (!activeConversation) return;
+
+
+    const updatedMessages = [...activeConversation!.messages, newMessage]
+    setConversations((prev) => 
+      prev.map((conversation) => 
+        conversation.id === activeConversationId 
+        ? {
+          ...conversation,
+          messages: updatedMessages,
+          updatedAt: new Date()
+        } : conversation
+      )
+    )
     setIsLoading(true)
 
     try {
@@ -38,7 +66,20 @@ const ChatLayout = () => {
         role : "assistant"
       }
 
-      setMessages((prev) => [...prev , aiMessage])
+      const finalMessages = [
+        ...updatedMessages,
+        aiMessage
+      ]
+
+      setConversations((prev) =>
+        prev.map((conversation) =>
+          conversation.id === activeConversationId ? {
+            ...conversation,
+            messages:finalMessages,
+            updatedAt: new Date()
+          } : conversation
+        )
+      )
       setIsLoading(false)
 
     } catch (error) {
@@ -56,12 +97,14 @@ const ChatLayout = () => {
     }
   }
 
+
+
   return (
     <div className="flex h-screen">
-      <Sidebar />
+      <Sidebar activeConversationId={activeConversationId} conversations={conversations} onSelectConversation={setActiveConversationId} />
       <main className="flex-1 flex flex-col">
         <ChatHeader />
-        <MessageList messages={messages} isLoading={isLoading} />
+        <MessageList messages={activeConversation?.messages ?? []} isLoading={isLoading} />
         <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
       </main>
     </div>

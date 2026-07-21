@@ -13,6 +13,14 @@ interface MessageListProp {
 
 const MessageList = ({messages ,isLoading} : MessageListProp) => {
   const bottomRef = useRef<HTMLDivElement>(null)
+
+  useEffect((()=>{
+    bottomRef.current?.scrollIntoView({
+      behavior: 'smooth'
+    })
+  }),[messages,isLoading])
+
+
   if(messages.length === 0){
     return(
       <div className='flex flex-1'>
@@ -21,11 +29,7 @@ const MessageList = ({messages ,isLoading} : MessageListProp) => {
     ) 
   }
 
-  useEffect((()=>{
-    bottomRef.current?.scrollIntoView({
-      behavior: 'smooth'
-    })
-  }),[messages,isLoading])
+
 
   return (
     <div className='flex-1 overflow-y-auto p-6'>

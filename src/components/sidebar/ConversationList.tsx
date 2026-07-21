@@ -1,10 +1,10 @@
 import { mockConversations } from "@/utils/mocks/mockConversation"
 import ConversationItem from "./ConversationItem"
-import type { Conversation } from "@/types/chat"
 import { ScrollArea } from "../ui/scroll-area"
+import type { Conversation } from "@/types/conversation"
 
 interface ConversationListProps{
-  conversations : Conversation[]
+  conversations : Conversation[],
 }
 const ConversationList = ({conversations} : ConversationListProps) => {
   return (
