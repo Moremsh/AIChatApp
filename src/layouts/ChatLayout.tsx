@@ -3,12 +3,13 @@ import ChatHeader from "@/components/chat/ChatHeader"
 import ChatInput from "@/components/chat/ChatInput"
 import MessageList from "@/components/chat/MessageList"
 import { mockMessages } from "@/utils/mocks/mockMessages"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import type { Message } from "@/types/message"
 import { mockAiReplies } from "@/utils/mocks/mockAiReply"
 const ChatLayout = () => {
   const [messages , setMessages] = useState<Message[]>(mockMessages)
   const [isLoading, setIsLoading] = useState(false);
+  const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY
 
   const handleSendMessage = (text : string) => {
     const trimmed = text.trim();

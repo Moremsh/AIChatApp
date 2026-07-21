@@ -35,6 +35,7 @@ const MessageList = ({messages ,isLoading} : MessageListProp) => {
       ))}
 
         {isLoading &&  <TypingIndicator/>}
+        
       </div>
       <div ref={bottomRef}/>
     </div>
